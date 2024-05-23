@@ -20,6 +20,17 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// PetType is the type of the pet. For example, a dog.
+// +kubebuilder:validation:Enum=dog;cat;bird;reptile
+type PetType string
+
+const (
+	DogPetType     PetType = "dog"
+	CatPetType     PetType = "cat"
+	BirdPetType    PetType = "bird"
+	ReptilePetType PetType = "reptile"
+)
+
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
@@ -28,14 +39,21 @@ type PetSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Foo is an example field of Pet. Edit pet_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	// Name is the name of the pet
+	Name string `json:"name"`
+	// Type is the type of pet
+	Type PetType `json:"type"`
+	// Birthday is the date the pet was born
+	Birthday metav1.Time `json:"birthday"`
 }
 
 // PetStatus defines the observed state of Pet
 type PetStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
+
+	// ID is the unique ID for the pet
+	ID string `json:"id,omitempty"`
 }
 
 //+kubebuilder:object:root=true

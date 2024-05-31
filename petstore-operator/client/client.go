@@ -1,7 +1,7 @@
 package client
 
 import (
-	pb "github.com/odogwuVal/kubernetes-extension/tree/main/petstore-operator/client/proto"
+	pb "github.com/PacktPublishing/Go-for-DevOps/chapter/14/petstore-operator/client/proto"
 	"google.golang.org/grpc"
 )
 

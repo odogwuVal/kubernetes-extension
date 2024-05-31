@@ -1,6 +1,6 @@
 syntax = "proto3";
 package petstore;
-option go_package = "https://github.com/odogwuVal/kubernetes-extension/tree/main/petstore-operator/client/proto";
+option go_package = "github.com/odogwuVal/kubernetes-extension/tree/main/petstore-operator/client/proto";
 
 import "google/type/date.proto";
 

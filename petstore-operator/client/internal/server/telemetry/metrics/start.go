@@ -49,7 +49,7 @@ func Start(ctx context.Context, c Controller) (Stop, error) {
 	}, nil
 }
 
-func newController(ctx context.Context, c Controller) (*basic.Controller, error) {
+func newController(ctx context.Context, c Controller) (*Controller, error) {
 	switch v := c.(type) {
 	case OTELGRPC:
 		return otelGRPC(ctx, v)
@@ -57,12 +57,13 @@ func newController(ctx context.Context, c Controller) (*basic.Controller, error)
 	return nil, fmt.Errorf("%T is not a valid Controller", c)
 }
 
-func otelGRPC(ctx context.Context, args OTELGRPC) (*basic.Controller, error) {
-	metricClient := otlpmetricgrpc.NewClient(
-		otlpmetricgrpc.WithInsecure(),
-		otlpmetricgrpc.WithEndpoint(args.Addr),
-	)
-	metricExp, err := otlpmetric.New(ctx, metricClient)
+func otelGRPC(ctx context.Context, args OTELGRPC) (*Controller, error) {
+	// metricClient, _ := otlpmetricgrpc.New(
+	// 	ctx,
+	// 	otlpmetricgrpc.WithInsecure(),
+	// 	otlpmetricgrpc.WithEndpoint(args.Addr),
+	// )
+	metricExp, err := otlpmetricgrpc.New(ctx, otlpmetricgrpc.WithInsecure(), otlpmetricgrpc.WithEndpoint(args.Addr))
 	if err != nil {
 		return nil, fmt.Errorf("Failed to create the collector metric exporter")
 	}

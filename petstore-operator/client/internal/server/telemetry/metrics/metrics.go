@@ -39,9 +39,7 @@ package metrics
 import (
 	"html/template"
 	"sort"
-	"strings"
 	"sync"
-	"time"
 
 	"github.com/odogwuVal/kubernetes-extension/blob/main/petstore-operator/client/internal/server/log"
 
@@ -143,24 +141,28 @@ func newLookups() *Lookups {
 
 		switch m.mtype {
 		case mtInt64Hist:
-			l.mtInt64Hist[m.name] = metric.Must(Meter).NewInt64Histogram(m.name, metric.WithDescription(m.desc))
+			histogram, err := Meter.Int64Histogram(m.name, metric.WithDescription(m.desc))
+			if err != nil {
+				log.Logger.Fatalf("failed to create histogram: %v", err)
+			}
+			l.mtInt64Hist[m.name] = histogram
 		case mtInt64UD:
-			l.mtInt64UD[m.name] = metric.Must(Meter).NewInt64UpDownCounter(m.name, metric.WithDescription(m.desc))
+			upDownCounter, err := Meter.Int64UpDownCounter(m.name, metric.WithDescription(m.desc))
+			if err != nil {
+				log.Logger.Fatalf("failed to create updown counter: %v", err)
+			}
+			l.mtInt64UD[m.name] = upDownCounter
 		case mtInt64:
-			l.mtInt64[m.name] = metric.Must(Meter).NewInt64Counter(m.name, metric.WithDescription(m.desc))
+			counter, err := Meter.Int64Counter(m.name, metric.WithDescription(m.desc))
+			if err != nil {
+				log.Logger.Fatalf("failed to create counter: %v", err)
+			}
+			l.mtInt64[m.name] = counter
 		default:
 			log.Logger.Fatalf("bug: we defined a metric type(%v) without adding support", m.mtype)
 		}
 	}
-	go func() {
-		time.Sleep(10 * time.Second)
-		unused := l.unused()
-		s := strings.Builder{}
-		if err := unusedMetricsTmpl.Execute(&s, unused); err != nil {
-			log.Logger.Fatalf("unusedMetricTmpl execute error: %s", err)
-		}
-		log.Logger.Println(s.String())
-	}()
+
 	return l
 }
 

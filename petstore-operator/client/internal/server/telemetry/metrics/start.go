@@ -49,7 +49,7 @@ func Start(ctx context.Context, c Controller) (Stop, error) {
 	}, nil
 }
 
-func newController(ctx context.Context, c Controller) (*Controller, error) {
+func newController(ctx context.Context, c Controller) (*basic.Controller, error) {
 	switch v := c.(type) {
 	case OTELGRPC:
 		return otelGRPC(ctx, v)
@@ -57,7 +57,7 @@ func newController(ctx context.Context, c Controller) (*Controller, error) {
 	return nil, fmt.Errorf("%T is not a valid Controller", c)
 }
 
-func otelGRPC(ctx context.Context, args OTELGRPC) (*Controller, error) {
+func otelGRPC(ctx context.Context, args OTELGRPC) (*basic.Controller, error) {
 	// metricClient, _ := otlpmetricgrpc.New(
 	// 	ctx,
 	// 	otlpmetricgrpc.WithInsecure(),
